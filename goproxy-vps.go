@@ -639,6 +639,10 @@ func (cm *CertManager) GetConfigForClient(hello *tls.ClientHelloInfo) (*tls.Conf
 		NextProtos:               []string{"h2", "http/1.1"},
 	}
 
+	if _, ok := cm.rsaHosts[hello.ServerName]; ok {
+		config.MinVersion = tls.VersionTLS10
+	}
+
 	if p, ok := cm.cpools[hello.ServerName]; ok {
 		config.ClientAuth = tls.RequireAndVerifyClientCert
 		config.ClientCAs = p
